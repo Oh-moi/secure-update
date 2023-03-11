@@ -96,3 +96,14 @@ services:
       - app_with_updater
     ports:
       - "5002:5002"
+
+
+  data_input:
+    image: data_input
+    build:
+      context: .
+      dockerfile: ./Dockerfile.data_input
+    depends_on:
+      - su-broker
+    ports:
+      - "5003:5003"
