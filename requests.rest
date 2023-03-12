@@ -1,52 +1,138 @@
-### get new alerts
+### user`s requests
+# Users:    Mary - user privilege, PASS: mary_pass
+#           Kate - admin privilege, PASS: kate_pass
+# Actions:  get_data - availible only for USER role
+#           get_alert - availible only for USER role
+#           update - availible for ADMIN role
 
-GET http://localhost:6003/alerts HTTP/1.1
-#auth: very-secure-token
+### GOOD REQUEST FOR GET DATA
+POST http://localhost:5005/auth_and_action HTTP/1.1
+content-type: application/json
+
+{
+    "login": "Mary", 
+    "password": "mary_pass",
+    "action": "get_data"
+}
+
+### GOOD REQUEST FOR GET ALERT
+POST http://localhost:5005/auth_and_action HTTP/1.1
+content-type: application/json
+
+{
+    "login": "Mary", 
+    "password": "mary_pass!@#$%^&",
+    "action": "get_alert"
+}
+
+### BAD REQUEST FOR GET ALERT
+POST http://localhost:5005/auth_and_action HTTP/1.1
+content-type: application/json
+
+{
+    "login": "Kate", 
+    "password": "kate_pass",
+    "action": "get_alert"
+}
 
 
-### application
+### GOOD REQUEST FOR UPDATE
+POST http://localhost:5005/auth_and_action HTTP/1.1
+content-type: application/json
 
-GET http://localhost:5000/ HTTP/1.1
+{
+    "login": "Kate", 
+    "password": "kate_pass",
+    "action": "get_update"
+}
+
+### GET ACTION RESULT 
+GET http://localhost:7003/get HTTP/1.1
+auth: faea822d-d98c-4a34-aefa-faf6a2e0ba41
 
 
-### data ingest
+### PUSH UPDATE FROM SERVER
+POST http://localhost:5009/push_update HTTP/1.1
+content-type: application/json
+auth: very-secure-token
 
+{
+    "version": 1.8
+}
+
+
+### PUSH DATA FROM HARDWARE
 POST http://localhost:5003/ingest HTTP/1.1
 content-type: application/json
 #auth: very-secure-token
 
 [
     {
-        "param_name": "current",
-        "param_units": "A",
-        "param_value": 60
-    },
-    {
         "param_name": "temperature",
         "param_units": "C",
-        "param_value": 36
+        "param_value": 25
+    },
+        {
+        "param_name": "units_per_hour",
+        "param_units": "Units",
+        "param_value": 1200
+    },
+        {
+        "param_name": "working_machines_per_hour",
+        "param_units": "Machines",
+        "param_value": 9
+    },
+        {
+        "param_name": "conveyor",
+        "param_units": "Boolean",
+        "param_value": 0
     }
 ]
 
 
 
-### manager
-
-POST http://localhost:5002/update HTTP/1.1
-content-type: application/json
-auth: very-secure-token
-
-{
-    "url":"http://file_server:5001/download-update/app-update.zip", 
-    "target": "app", 
-    "digest": "4b92e9b415d7086c070634098d012ad347a11ec8aa4763eca837b1e84210a58f", 
-    "digest_alg": "sha256"
-}
 
 
-### get update digest
-GET http://localhost:5001/get-digest/app-update.zip HTTP/1.1
 
-### get archived update file
-GET http://localhost:5001/download-update/app-update.zip HTTP/1.1
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# ### application
+
+# GET http://localhost:5000/ HTTP/1.1
+
+
+# ### manager
+
+# POST http://localhost:5002/update HTTP/1.1
+# content-type: application/json
+# auth: very-secure-token
+
+# {
+#     "url":"http://file_server:5001/download-update/app-update.zip", 
+#     "target": "app", 
+#     "digest": "d919fdec75b47ca1325bfda1f221c9534dbddbe5f008f934ab991f5711b614a9", 
+#     "digest_alg": "sha256"
+# }
+
+
+# ### get update digest
+# GET http://localhost:5001/get-digest/app-update.zip HTTP/1.1
+
+# ### get archived update file
+# GET http://localhost:5001/download-update/app-update.zip HTTP/1.1

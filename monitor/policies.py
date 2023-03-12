@@ -7,12 +7,36 @@ def check_operation(id, details):
     dst = details['deliver_to']
     operation = details['operation']
 
+
+## my rules
+    if  src == 'fia_input' and dst == 'fia_processor' \
+        and operation == 'process_new_users_request':
+        authorized = True 
+    if  src == 'fia_processor' and dst == 'fdp_output' \
+        and operation == 'process_new_auth':
+        authorized = True 
+    if  src == 'data_processor' and dst == 'fdp_output' \
+        and operation == 'process_new_events':
+        authorized = True 
+    if  src == 'data_processor' and dst == 'fdp_output' \
+        and operation == 'process_new_data':
+        authorized = True 
+    if  src == 'update_input' and dst == 'update_processor' \
+        and operation == 'process_new_update_availible':
+        authorized = True 
+    if  src == 'update_processor' and dst == 'fdp_output' \
+        and operation == 'process_update_delivery':
+        authorized = True 
+#
+
+## rules from vebinar
     if  src == 'data_input' and dst == 'data_processor' \
         and operation == 'process_new_data':
         authorized = True    
-    if  src == 'data_processor' and dst == 'data_output' \
-        and operation == 'process_new_events':
-        authorized = True  
+#    if  src == 'data_processor' and dst == 'data_output' \
+#        and operation == 'process_new_events':
+#        authorized = True  
+#
 
     if  src == 'downloader' and dst == 'manager' \
         and operation == 'download_done':
